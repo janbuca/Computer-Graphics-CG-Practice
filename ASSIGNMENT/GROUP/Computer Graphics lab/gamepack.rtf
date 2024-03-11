@@ -1,0 +1,792 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fswiss\fcharset0 Arial;}}
+{\*\generator Msftedit 5.41.15.1515;}\viewkind4\uc1\pard\f0\fs20 Game Pack in C++.\par
+\par
+#include<string.h>\par
+#include<math.h>\par
+#include<graphics.h>\par
+#include<dos.h>\par
+#include<stdlib.h>\par
+#include<stdio.h>\par
+#include<conio.h>\par
+#include<iostream.h>\par
+#include<process.h>\par
+#include<time.h>\par
+void main();\par
+int temp_life;\par
+int i=8,j=18,a[20][20],ri,rj,max=2,speed=2,op_graph=0;\par
+int score=0,nbox=5,life=5,level=1;\par
+\par
+clock_t start, end;\par
+void draw(int);\par
+void drawbox(int);\par
+void decr();\par
+void genbox();\par
+void shotbox(int);\par
+void strt();\par
+void putscore(int);\par
+void lifebox(int );\par
+\par
+int global=9;int open_times=0,prev_card=0,comp=0;\par
+\par
+void card(int left,int top,int right,int bottom)\par
+\{\par
+int x,y;\par
+long int er=0;\par
+if(global==9)\par
+er=2000;\par
+else\par
+er=200;\par
+for (long double g=0;g<er;g++)\par
+\{\par
+\tab\tab  x=random(right);\par
+\tab\tab  y=random(bottom);\par
+\tab\tab  if(x<left)\par
+\tab\tab  \{\par
+\tab\tab  g--;\par
+\tab\tab  continue;\par
+\tab\tab  \}\par
+\par
+\tab\tab  if(y<top)\par
+\tab\tab  \{\par
+\tab\tab  g--;\par
+\tab\tab  continue;\par
+\tab\tab  \}\par
+\par
+\tab\tab  int colors=random(15);\par
+\par
+\tab\tab  if(colors==1||colors==10)\par
+\tab\tab  \{\par
+\tab\tab  g--;\par
+\tab\tab  continue;\par
+\tab\tab  \}\par
+\tab\tab  setcolor(BLACK);\par
+\tab\tab  setfillstyle(SOLID_FILL,colors);\par
+\tab\tab  bar3d(x-4,y-4,x+4,y+4,1,1);\par
+\par
+\par
+\par
+\tab\tab  \}\par
+\}\par
+void open(int left[],int top[],int right[],int bottom[],int game[],int z)\par
+\{\par
+sound(900);\par
+delay(16);\par
+nosound();\par
+\par
+\par
+int x;\par
+global=909;\par
+\par
+\tab\tab  for(int j=left[z],k=top[z],l=right[z],i=bottom[z];j<=right[z];j++)\par
+\tab\tab  \{\par
+\par
+\tab\tab  setfillstyle(SOLID_FILL,BLACK);\par
+\tab\tab  bar(j+1,k,l+1,i+1);\par
+\tab\tab  setcolor(WHITE);\par
+\tab\tab  rectangle(j+1,k,l+1,i+1);\par
+\tab\tab  sound(j*20);\par
+\tab\tab  delay(5);\par
+\tab\tab  nosound();\par
+\tab\tab  \}\par
+\par
+\par
+\tab\tab  int number=game[z];\par
+\tab\tab  char string[5];\par
+\tab\tab  setcolor(BLACK);\par
+\tab\tab  settextstyle(TRIPLEX_FONT,HORIZ_DIR,1);\par
+\tab\tab  outtextxy(left[z]+25,top[z]+35,itoa(number, string, 10));\par
+\par
+\tab\tab  if(open_times==0)\par
+\tab\tab  prev_card=z;\par
+\par
+\tab\tab  if(open_times==1)\par
+\tab\tab  if(game[z]==game[prev_card])\par
+\tab\tab  game[prev_card]=game[z]=-100;\par
+\par
+\tab\tab  open_times++;\par
+\par
+\tab\tab  if(open_times==2)\par
+\tab\tab  for(int k=0,t=19,b=99;k<4;k++,t+=120,b+=121)     //displaying cards\par
+\tab\tab  for(int i=0,l=55,r=125;i<4;i++,l+=150,r+=150)\par
+\tab\tab  \{\par
+\tab\tab  sound(1000);\par
+\tab\tab  delay(60);\par
+\tab\tab  nosound();\par
+\par
+\tab\tab  if(k==0 && i==0) delay(90);\par
+\tab\tab  card(l,t,r,b);\par
+\tab\tab  open_times=0;\par
+\tab\tab  \}\par
+\par
+\}\par
+\par
+void menu(int a,int b,int c,int d,int e)\par
+\{\par
+ setcolor(a);\par
+ settextstyle(TRIPLEX_FONT,HORIZ_DIR,7);\par
+ outtextxy(22,100,"1. BRICKS");\par
+\par
+ setcolor(b);\par
+ settextstyle(TRIPLEX_FONT,HORIZ_DIR,7);\par
+ outtextxy(22,200,"2. PAIRS II");\par
+\par
+ setcolor(c);\par
+ settextstyle(TRIPLEX_FONT,HORIZ_DIR,4);\par
+ outtextxy(15,300,"3. HELP");\par
+\par
+ setcolor(d);\par
+ settextstyle(TRIPLEX_FONT,HORIZ_DIR,4);\par
+ outtextxy(15,350,"4. CREDITS");\par
+\par
+ setcolor(e);\par
+ settextstyle(TRIPLEX_FONT,HORIZ_DIR,4);\par
+ outtextxy(15,400,"5. EXIT");\par
+\par
+\}\par
+\par
+void open_graph()\par
+\{\par
+    int   x_center = 320, y_center = 240, rad = 220;\par
+    int   z,k,x[10],y[10];\par
+\par
+    setcolor(4);\par
+    for(int xi=30;xi>4;xi--)\par
+    \{\par
+    sound(xi*20);\par
+    settextstyle(GOTHIC_FONT,HORIZ_DIR,xi);\par
+    outtextxy(xi,220,"Gaming begins here......");\par
+    delay(320);\par
+    cleardevice();\par
+    \}\par
+    setcolor(10);\par
+    for (z=0;z<10;z++)\par
+    \{\par
+       x[z]=x_center+rad*cos(36*z*3.14159/180);\par
+       y[z]=y_center+rad*sin(36*z*3.14159/180);\par
+    \}\par
+    for (z=0;z<10;z++)\par
+    for (k=0;k<10;k++)\par
+\tab\tab    \{\par
+\tab\tab    sound(k*200);\par
+\tab\tab    delay(50);\par
+\tab\tab    line(x[z],y[z],x[k],y[k]);\par
+\tab\tab    nosound();\par
+\tab\tab    \}\par
+\par
+   for(int h=0;h<500;h++)\par
+   \{\par
+   sound(h*9);\par
+setfillstyle( random(12),random(15) );\par
+bar3d(random(640),random(480),random(640),random(480),random(30),\par
+random(18));\par
+   \}\par
+  op_graph++;\par
+\}\par
+void loading()\par
+\{\par
+cleardevice();\par
+  setcolor(13);\par
+  settextstyle(TRIPLEX_FONT,HORIZ_DIR,0);\par
+  setusercharsize(2, 1, 1, 1);\par
+  outtextxy(138,198,"LOADING");              //LOADING\par
+  setcolor(13);\par
+settextstyle(TRIPLEX_FONT,HORIZ_DIR,0);\par
+setusercharsize(2, 1, 1, 1);\par
+\par
+setcolor(BLUE);\par
+rectangle(119,199,421,231);\par
+rectangle(118,198,422,232);\par
+setcolor(10);\par
+for(int ii=120;ii<=420;ii++)\par
+\{\par
+line(ii,200,ii,230);\par
+sound(ii+1500);\par
+delay(10);\par
+nosound();\par
+\}\par
+\par
+\}\par
+void gameover()\par
+\{\par
+cleardevice();\par
+settextstyle(GOTHIC_FONT,0,10);\par
+cout<<"a";\par
+for(int g=0;g<450;g++)\par
+\{\par
+sound(g*10);\par
+delay(3);\par
+setcolor(LIGHTRED);\par
+if(g%20==0) \{cleardevice();setcolor(12);\}\par
+outtextxy(70,g,"game over");\par
+nosound();\par
+\}\par
+main();\par
+\}\par
+\par
+void main()\par
+\{\par
+ int gdriver = DETECT, gmode;\par
+ initgraph(&gdriver, &gmode, "c:\\tc\\bgi");\par
+ cleardevice();\par
+ if(op_graph==0) open_graph();\par
+\par
+ settextstyle(TRIPLEX_FONT,HORIZ_DIR,0);\par
+ for(int si=1;si<10;si++)\par
+ \{\par
+  sound(si*850);\par
+  setcolor(LIGHTCYAN);\par
+  setusercharsize(si,1,si,1);\par
+  outtextxy(13,150,"GAME PACK");\par
+  delay(250);\par
+  nosound();\par
+  cleardevice();\par
+  \}\par
+\par
+ randomize();\par
+ setfillstyle(3,RED);\par
+ bar3d(0, 0,639,479, 0, 0);//background\par
+\par
+ setcolor(WHITE);\par
+ settextstyle(4,HORIZ_DIR,7);\par
+ outtextxy(220,25,"MENU");\par
+\par
+ char lion;\par
+ int move=5;\par
+\par
+ lion=getch();\par
+ while(lion!=27)\par
+ \{\par
+\par
+  if(lion==13)  break;\par
+  if(lion=='P') move++;\par
+  if(lion=='H') move--;\par
+\par
+  if(move<1)move=5;\par
+  if(move>5)move=1;\par
+\par
+  if(move==1)  menu(10,8,8,8,8);\par
+  if(move==2)  menu(8,10,8,8,8);\par
+  if(move==3)  menu(8,8,10,8,8);          //7 gray 14-yellow\par
+  if(move==4)  menu(8,8,8,10,8);\par
+  if(move==5)  menu(8,8,8,8,10);\par
+\par
+  lion=getch();\par
+  sound(1700);\par
+  delay(7);\par
+  nosound();\par
+ \}\par
+ cleardevice();\par
+ if(move==5) exit(0);\par
+\par
+\par
+\par
+ if(move==1)\par
+ \{\par
+  //bricks video game shooting  prg.\par
+\par
+ loading();\par
+\par
+ int gd=DETECT,gm;\par
+ initgraph(&gd,&gm,"D:\\CPP\\TC\\BGI");\par
+\par
+ setcolor(10);\par
+ outtextxy(500,75,"score :");\par
+ outtextxy(500,150,"level :");\par
+ outtextxy(500,225,"Life");\par
+ lifebox(10);\par
+ putscore(10);\par
+ strt();\par
+ \}\par
+/*\par
+  PAIRS II\par
+\par
+*/\par
+if(move==2)\par
+\{\par
+int a[8],game[16],i=0,z=8,k,flag,temp,t,b,l,j=0,u=0,o=0,p=0;\par
+int left[16],top[16],right[16],bottom[16];\par
+\par
+randomize();\par
+\par
+loading();\par
+\par
+for(int ii=0;ii<=640;ii++)\par
+line(ii,0,ii,480);\par
+\par
+setcolor(1);\par
+for(ii=0;ii<=640;ii++)\par
+line(0,ii,640,ii);\par
+\par
+setcolor(3);\par
+for(ii=640;ii>=0;ii--)\par
+line(ii,0,ii,480);\par
+\par
+setcolor(BLUE);\par
+for(ii=640;ii>=0;ii--)\par
+line(0,ii,640,ii);\par
+\par
+setcolor(RED);\par
+for(ii=0;ii<=640;ii++)\par
+\{\par
+sound(ii*5);\par
+line(640,ii,ii,480);\par
+delay(5);\par
+nosound();\par
+\}\par
+\par
+setcolor(0);\par
+for(ii=0;ii<=640;ii++)\par
+\{\par
+sound(ii*5);\par
+line(0,ii,640,480);\par
+delay(2);\par
+nosound();\par
+\}\par
+\par
+\par
+//selecting 8 nos (1-100)without repeating\par
+randomize();\par
+a[0]=random(100);\par
+while(i!=8)\par
+\{\par
+redo:\par
+temp=random(100);\par
+flag=1;\par
+for(k=0;k<=i;k++)\par
+if(a[k]==temp)\{flag=5;break;\}\par
+if (flag==5) goto redo;\par
+else\par
+\{\par
+a[i++]=temp;\par
+game[z++]=temp;\par
+\}\par
+\}\par
+\par
+//randomly filling the 8 nos from an array without repeating\par
+int r=0;\par
+while(r!=8)\par
+\{\par
+label:\par
+temp=a[random(8)];\par
+flag=1;\par
+for(k=0;k<=r;k++)\par
+if(game[k]==temp)\{flag=5;break;\}\par
+if (flag==5) goto label;\par
+else\par
+game[r++]=temp;\par
+\}\par
+\par
+setfillstyle(11,RED);\par
+setcolor(YELLOW);\par
+bar(0, 0,638,478);//backgrond\par
+\par
+for(k=0,t=19,b=99;k<4;k++,t+=120,b+=121)     //displaying cards\par
+for(i=0,l=55,r=125;i<4;i++,l+=150,r+=150)\par
+\{\par
+left[j++]=l;\par
+top[u++]=t;\par
+right[o++]=r;\par
+bottom[p++]=b;\par
+sound(i*200);\par
+card(l,t,r,b);\par
+\}\par
+nosound();\par
+for(int you=1;you<=20;you++)\par
+\{\par
+if(you%2)\par
+setcolor(LIGHTGREEN);\par
+else\par
+setcolor(RED);\par
+for(k=0,t=15,b=103;k<4;k++,t+=120,b+=121)      //high light cursor\par
+for(i=0,l=50,r=130;i<4;i++,l+=150,r+=150)\par
+for(int we=1;we<=5;we++)\par
+\{\par
+sound(we*900);\par
+rectangle(l-we,t-we,r+we,b+we);\par
+nosound();\par
+\}\par
+delay(100);\par
+\}\par
+\par
+\par
+setcolor(0);\par
+char ch=getch();\par
+int pntr=0,turn=1;\par
+\par
+while(ch!=27)\par
+\{\par
+\par
+\tab\tab  if(ch=='M') pntr++;\par
+\tab\tab  if(ch=='K') pntr--;\par
+\tab\tab  if(ch=='H') pntr=pntr-4;\par
+\tab\tab  if(ch=='P') pntr+=4;\par
+\par
+\tab\tab  if(pntr>=17)\par
+\tab\tab  pntr=pntr-16;\par
+\par
+\tab\tab  if(pntr<1)\par
+\tab\tab  pntr=pntr+16;\par
+\par
+\tab\tab  int m=1;\par
+\tab\tab  if(open_times==1)\par
+\tab\tab  if(pntr-1==prev_card)\par
+\tab\tab  \{\par
+\tab\tab  \tab\tab  ch=getch();\par
+\tab\tab  \tab\tab  continue;\par
+\tab\tab  \}\par
+int var_new34=9;\par
+\par
+if(game[pntr-1]==-100)\par
+var_new34=0;\par
+\par
+\tab\tab  end:\par
+\tab\tab  for(k=0,t=15,b=103;k<4;k++,t+=120,b+=121)      //high light cursor\par
+\tab\tab  for(i=0,l=50,r=130;i<4;i++,l+=150,r+=150)\par
+\tab\tab  \{\par
+\par
+\tab\tab  \tab\tab  setcolor(BLACK);\par
+\tab\tab  \tab\tab  if(m==pntr)\par
+\tab\tab  \tab\tab  \{\par
+\tab\tab  \tab\tab  \tab\tab  setcolor(LIGHTGREEN);\par
+\tab\tab  \tab\tab  \tab\tab  if(game[pntr-1]==-100)\par
+\tab\tab  \tab\tab  \tab\tab  setcolor(LIGHTRED);\par
+\tab\tab  \tab\tab  \}\par
+\par
+\tab\tab  \tab\tab  for(int we=1;we<=5;we++)\par
+\tab\tab  \tab\tab  rectangle(l-we,t-we,r+we,b+we);\par
+\tab\tab  \tab\tab  m++;\par
+\tab\tab  \}\par
+\par
+if(var_new34)\par
+if(ch==13)\par
+open(left,top,right,bottom,game,pntr-1);     //open card\par
+\par
+\par
+int y=0;\par
+for(int wer=0;wer<16;wer++)\par
+if(game[wer]==-100)\par
+y++;\par
+if(y==16) gameover();\par
+\par
+ ch=getch();\par
+ sound(2500);\par
+ delay(6);\par
+ nosound();\par
+ \}\par
+ if(ch==27) main();\par
+\par
+\}\par
+\par
+if(move==3)\par
+\{\par
+char ctrl;\par
+do\par
+ \{\par
+char help_topic[]="\tab\tab *******************HELP*********************\par
+USERS\par
+MANUAL\par
+\par
+1. PAIRS II\par
+\par
+The general outline of the game is as follows.\par
+*\par
+It is basically a card game.\par
+* One can flip and see only two cards at a\par
+time simultaneously in the given set of cards.\par
+* One has to match the\par
+cards in the given set.\par
+* One wins the game if all the matches are made\par
+correctly.\par
+* This game is a time-trailed game i.e. one's score becomes\par
+invalid if it exceeds the tine limit.\par
+* To navigate one can use the arrow\par
+keys.\par
+* To open the card  you can hit enter.\par
+" ;\par
+char help_brick[]="\par
+\tab BRICKS\par
+The general outline is as follows.\par
+*It is\par
+a brick game.\par
+*It consist of a shooting box and we have to shoot the\par
+bricks.\par
+*To move the shooting box right press the right direction key and\par
+to move left press the left direction key.\par
+*To shoot press the up\par
+direction key.\par
+*Basically there are 5 levels in the game.\par
+*You can win\par
+each level when u reach the score of 2500.\par
+*When u hit each brick you get\par
+25 points.\par
+*But if the bricks touch the shooting box or if it touches the\par
+ground one of your life is lost.\par
+*In total there are 5 lives.";\par
+textcolor(10);\par
+for(int i=0;i<strlen(help_topic);i++)\par
+\{\par
+\tab\tab  sound(i*20);\par
+\tab\tab  cout<<help_topic[i];\par
+\tab\tab  delay(15);\par
+\tab\tab  nosound();\par
+\}\par
+int cv;\par
+for(i=0,cv=2000;i<strlen(help_brick);i++,cv--)\par
+\{\par
+\tab\tab  sound(cv*2);\par
+\tab\tab  cout<<help_brick[i];\par
+\tab\tab  delay(15);\par
+\tab\tab  nosound();\par
+\}\par
+\par
+ ctrl=getch();\par
+ \}while(ctrl!=27&&ctrl<28&&ctrl>25);\par
+ if(ctrl==27) main();\par
+\}\par
+\par
+\par
+if(move==4)\par
+\{\par
+ cleardevice();\par
+ setcolor(LIGHTGREEN);\par
+ settextstyle(TRIPLEX_FONT,HORIZ_DIR,0);\par
+ setusercharsize(1,1,1,1);\par
+\par
+ setcolor(LIGHTGREEN);\par
+ settextstyle(TRIPLEX_FONT,HORIZ_DIR,6);\par
+ outtextxy(320,250,"&");\par
+\par
+ setcolor(LIGHTGREEN);\par
+ rectangle(1,1,638,478);//background\par
+ for(int ab=5,bc=420;ab<350;ab++,bc--)\par
+ \{\par
+ sound(ab*620);\par
+\par
+ setfillstyle(6,BLACK);\par
+ bar(5, 130,637,250);\par
+ bar(9,350,635,450);\par
+\par
+ setcolor(random(15));\par
+ settextstyle(TRIPLEX_FONT,HORIZ_DIR,6);\par
+\par
+ settextstyle(TRIPLEX_FONT,HORIZ_DIR,6);\par
+ sound(bc*2000);\par
+ delay(1);\par
+ nosound();\par
+ \}\par
+sleep(1);\par
+main();\par
+\}\par
+\par
+\par
+\}//void main's block\par
+\par
+void strt()\par
+\{\par
+int op;\par
+setcolor(0);\par
+line(60+i*25,j*25,60+rj*25,ri*25);\par
+\par
+for(ri=0;ri<19;ri++)\par
+for(rj=0;rj<16;rj++)\par
+a[ri][rj]=0;\par
+randomize();\par
+genbox();\par
+drawbox(12);\par
+start=clock();\par
+op=getch();\par
+while(1)\par
+\{\par
+while(!kbhit())\par
+\{\par
+\par
+end = clock();\par
+if((end - start) / CLK_TCK > speed)\par
+\{\par
+decr();\par
+start=clock();\par
+\}\par
+\par
+\}\par
+\par
+while(kbhit())\par
+\{\par
+op=getch();\par
+switch(op)\par
+\{\par
+case 77:\par
+draw(0);\par
+if(i<15) i++;\par
+draw(10);\par
+break;\par
+case 75:\par
+draw(0);\par
+if(i>0) i--;\par
+draw(10);\par
+break;\par
+case 72:\par
+       shotbox(i);\par
+       break;\par
+case 27:main();\par
+\}\par
+\}\par
+\par
+\}\par
+\par
+\par
+\}\par
+\par
+void draw(int color)\par
+\{\par
+int c;\par
+c=getcolor();\par
+setcolor(color);\par
+setfillstyle(INTERLEAVE_FILL,color);\par
+bar(50+25*i,j*25,75+25*i,j*25+25);\par
+rectangle(50+25*i,j*25,75+25*i,j*25+25);\par
+setcolor(14);\par
+rectangle(50,0,450,475);\par
+\par
+setcolor(c);\par
+\}\par
+\par
+\par
+void genbox()\par
+\{\par
+int x;\par
+for(x=0;x<nbox;x++)\par
+\{\par
+rj=rand()%16;\par
+if(a[0][rj]==1) x--;\par
+a[0][rj]=1;\par
+\}\par
+\}\par
+\par
+\par
+\par
+\par
+void decr()\par
+\{\par
+if(max<17)\par
+\{\par
+drawbox(0);\par
+for(ri=max;ri>=0;ri--)\par
+for(rj=0;rj<16;rj++)\par
+a[ri+1][rj]=a[ri][rj];\par
+for(rj=0;rj<16;rj++)\par
+a[0][rj]=0;\par
+genbox();\par
+drawbox(12);\par
+\}\par
+else\par
+\{\par
+printf("a");\par
+lifebox(0);\par
+--life;\par
+lifebox(10);\par
+if(life==0) gameover();\par
+\par
+\par
+else \{drawbox(0);strt();\}\par
+\}\par
+\}\par
+\par
+void drawbox(int c)\par
+\{\par
+setcolor(c);\par
+\par
+for(ri=0;ri<18;ri++)\par
+for(rj=0;rj<16;rj++)\par
+     if(a[ri][rj]==1)\par
+     \{\par
+     max=ri;\par
+     setfillstyle(INTERLEAVE_FILL,c);\par
+     bar(50+rj*25,ri*25,50+rj*25+25,ri*25+25);\par
+     if(c!=0) setcolor(14);\par
+     rectangle(50+rj*25,ri*25,50+rj*25+25,ri*25+25);\par
+     \}\par
+setcolor(14);\par
+rectangle(50,0,450,475);\par
+\}\par
+\par
+\par
+void shotbox(int rj)\par
+\{\par
+int ri,r;\par
+drawbox(0);\par
+for(ri=18;ri>=0;ri--)\par
+if(a[ri][rj]==1)\par
+\{a[ri][rj]=0;\par
+\par
+file://for(r=18;r>=ri;r--)\par
+setcolor(13);\par
+line(60+i*25,j*25,60+rj*25,ri*25);\par
+sound(480);\par
+delay(25);\par
+nosound();\par
+\par
+putscore(0);\par
+if(score%100==0 && score!=0 )\par
+\{\par
+\par
+putscore(0);\par
+level++;\par
+putscore(10);\par
+\par
+if(speed==1)\par
+if(nbox==5) nbox=7;\par
+else if(nbox==7) nbox=9;\par
+else if(nbox==9) nbox=11;\par
+else\par
+\{\par
+setcolor(10);\par
+drawbox(12);\par
+cout<<"a";\par
+cleardevice();\par
+gameover();\par
+main();\par
+\}\par
+else speed--;\par
+putscore(0);\par
+score++;\par
+putscore(10);\par
+strt();break;\}\par
+else\{\par
+score++;\par
+putscore(10);\par
+break;\}\}\par
+drawbox(12);\par
+setcolor(0);\par
+line(60+i*25,j*25,60+rj*25,ri*25);\par
+\par
+\par
+\}\par
+void putscore(int color)\par
+\{\par
+char str[20];\par
+int c;\par
+c=getcolor();\par
+setcolor(color);\par
+itoa(score*25,str,10);\par
+outtextxy(550,75,str);\par
+itoa(level,str,10);\par
+outtextxy(550,150,str);\par
+setcolor(c);\par
+\}\par
+\par
+void lifebox(int color)\par
+\{\par
+int i,c;\par
+c=getcolor();\par
+setcolor(color);\par
+for(i=1;i<=life;i++)\par
+\{\par
+setfillstyle(INTERLEAVE_FILL,color);\par
+bar(500,250+i*25,525,275+i*25);\par
+if(color) setcolor(14);\par
+rectangle(500,250+i*25,525,275+i*25);\par
+\}\par
+setcolor(c);\par
+\}\par
+}
+ 

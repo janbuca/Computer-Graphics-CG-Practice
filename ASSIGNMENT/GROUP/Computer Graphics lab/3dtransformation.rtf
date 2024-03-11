@@ -1,0 +1,368 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fswiss\fcharset0 Arial;}}
+{\*\generator Msftedit 5.41.15.1515;}\viewkind4\uc1\pard\f0\fs20 Program for 3-D Transformation\par
+\par
+#include<iostream.h>\par
+#include<dos.h>\par
+#include<stdio.h>\par
+#include<math.h>\par
+#include<conio.h>\par
+#include<graphics.h>\par
+#include<process.h>\par
+\par
+int gd=DETECT,gm;\par
+double x1,x2,y1,y2;\par
+\par
+void show_message()\par
+\tab\{\par
+\tab char *mess[]=\{"-","=","["," ","3","D","-","T","r","a","n","s",\par
+\tab\tab       "f","o","r","m","a","t","i","o","n"," ","]","=","-"\};\par
+\tab int xx=28,xxx=52,i,j;\par
+\tab _setcursortype(_NOCURSOR);\par
+\tab for(i=0,j=24;i<15,j>=12;i++,j--)\par
+\tab\tab\{\par
+\tab\tab gotoxy(xx,1);\par
+\tab\tab cout<<mess[i];\par
+\tab\tab xx++;\par
+\tab\tab gotoxy(xxx,1);\par
+\tab\tab cout<<mess[j];\par
+\tab\tab xxx--;\par
+\tab\tab delay(50);\par
+\tab\tab\}\par
+\tab _setcursortype(_NORMALCURSOR);\par
+\tab\}\par
+\par
+\par
+void draw_cube(double edge[20][3])\par
+      \tab\{\par
+        initgraph(&gd,&gm,"..\\bgi");\par
+\tab int i;\par
+\tab clearviewport();\par
+\tab for(i=0;i<19;i++)\par
+\tab       \tab\{\par
+\tab        \tab x1=edge[i][0]+edge[i][2]*(cos(2.3562));\par
+\tab        \tab y1=edge[i][1]-edge[i][2]*(sin(2.3562));\par
+\tab        \tab x2=edge[i+1][0]+edge[i+1][2]*(cos(2.3562));\par
+\tab        \tab y2=edge[i+1][1]-edge[i+1][2]*(sin(2.3562));\par
+\tab\tab line(x1+320,240-y1,x2+320,240-y2);\par
+\tab      \tab\}\par
+\tab line(320,240,320,25);\par
+\tab line(320,240,550,240);\par
+\tab line(320,240,150,410);\par
+\tab getch();\par
+     \tab closegraph();\par
+     \tab\}\par
+\par
+void scale(double edge[20][3])\par
+     \tab\{\par
+\tab double a,b,c;\par
+\tab int i;\par
+\tab cout<<"\par
+\tab\tab " Enter The Scaling Factors ":=";\par
+\tab cin>>a>>b>>c;\par
+        initgraph(&gd,&gm,"..\\bgi");\par
+\tab clearviewport();\par
+  \tab for(i=0;i<20;i++)\par
+\tab\tab\{\par
+\tab\tab edge[i][0]=edge[i][0]*a;\par
+\tab\tab edge[i][1]=edge[i][1]*b;\par
+\tab\tab edge[i][2]=edge[i][2]*c;\par
+\tab\tab\}\par
+\tab draw_cube(edge);\par
+     \tab closegraph();\par
+     \tab\}\par
+\par
+void translate(double edge[20][3])\par
+  \tab\{\par
+     \tab int a,b,c;\par
+     \tab int i;\par
+\tab cout<<"\par
+\tab\tab " Enter The Translation Factors ":=";\par
+\tab cin>>a>>b>>c;\par
+        initgraph(&gd,&gm,"..\\bgi");\par
+\tab clearviewport();\par
+        for(i=0;i<20;i++)\par
+\tab        \tab\{\par
+\tab\tab edge[i][0]+=a;\par
+\tab\tab edge[i][0]+=b;\par
+\tab\tab edge[i][0]+=c;\par
+\tab        \tab\}\par
+   \tab draw_cube(edge);\par
+     \tab closegraph();\par
+  \tab\}\par
+\par
+void rotate(double edge[20][3])\par
+  \tab\{\par
+      \tab int ch;\par
+      \tab int i;\par
+      \tab double temp,theta,temp1;\par
+    \tab clrscr();\par
+ \tab cout<<"\par
+\tab\tab\tab -=[ Rotation About ]=-";\par
+ \tab cout<<"\par
+\par
+\tab\tab 1:==>" X-Axis "";\par
+\tab cout<<"\par
+\tab\tab 2:==>" Y-Axis "";\par
+        cout<<"\par
+\tab\tab 3:==>" Z-Axis "";\par
+       \tab cout<<"\par
+\par
+\tab\tab " Enter Your Choice ":=";\par
+\tab cin>>ch;\par
+\tab switch(ch)\par
+\tab  \tab\{\par
+\tab      \tab case 1:\par
+\tab\tab\tab cout<<"\par
+\tab\tab " Enter The Angle ":=";\par
+\tab\tab\tab cin>>theta;\par
+\tab\tab\tab theta=(theta*3.14)/180;\par
+\tab\tab\tab for(i=0;i<20;i++)\par
+\tab\tab\tab   \tab\{\par
+\tab\tab\tab     \tab edge[i][0]=edge[i][0];\par
+\tab\tab\tab       \tab temp=edge[i][1];\par
+\tab\tab\tab       \tab temp1=edge[i][2];\par
+\tab\tab\tab     \tab edge[i][1]=temp*cos(theta)-temp1*sin(theta);\par
+\tab\tab\tab     \tab edge[i][2]=temp*sin(theta)+temp1*cos(theta);\par
+\tab\tab\tab   \tab\}\par
+\tab\tab\tab draw_cube(edge);\par
+\tab\tab\tab break;\par
+\par
+\tab      \tab case 2:\par
+\tab\tab\tab cout<<"\par
+\tab\tab " Enter The Angle ":=";\par
+\tab\tab\tab cin>>theta;\par
+\tab\tab\tab theta=(theta*3.14)/180;\par
+\tab\tab\tab for(i=0;i<20;i++)\par
+\tab\tab\tab   \tab\{\par
+\tab\tab\tab     \tab edge[i][1]=edge[i][1];\par
+\tab\tab\tab       \tab temp=edge[i][0];\par
+\tab\tab\tab       \tab temp1=edge[i][2];\par
+\tab\tab\tab     \tab edge[i][0]=temp*cos(theta)+temp1*sin(theta);\par
+\tab\tab\tab     \tab edge[i][2]=-temp*sin(theta)+temp1*cos(theta);\par
+\tab\tab\tab   \tab\}\par
+\tab\tab\tab draw_cube(edge);\par
+\tab\tab\tab break;\par
+\par
+\tab      \tab case 3:\par
+\tab\tab\tab cout<<"\par
+\tab\tab " Enter The Angle ":=";\par
+\tab\tab\tab cin>>theta;\par
+\tab\tab\tab theta=(theta*3.14)/180;\par
+\tab\tab\tab for(i=0;i<20;i++)\par
+\tab\tab\tab   \tab\{\par
+\tab\tab\tab     \tab edge[i][2]=edge[i][2];\par
+\tab\tab\tab       \tab temp=edge[i][0];\par
+\tab\tab\tab       \tab temp1=edge[i][1];\par
+\tab\tab\tab     \tab edge[i][0]=temp*cos(theta)-temp1*sin(theta);\par
+\tab\tab\tab     \tab edge[i][1]=temp*sin(theta)+temp1*cos(theta);\par
+\tab\tab\tab   \tab\}\par
+\tab\tab\tab draw_cube(edge);\par
+\tab\tab\tab break;\par
+\tab  \tab\}\par
+\tab\}\par
+\par
+void reflect(double edge[20][3])\par
+\tab\{\par
+    \tab int ch;\par
+    \tab int i;\par
+    \tab clrscr();\par
+  \tab cout<<"\par
+\tab\tab\tab -=[ Reflection About ]=-";\par
+ \tab cout<<"\par
+\par
+\tab\tab 1:==>" X-Axis "";\par
+\tab cout<<"\par
+\tab\tab 2:==>" Y-Axis "";\par
+        cout<<"\par
+\tab\tab 3:==>" Z-Axis "";\par
+       \tab cout<<"\par
+\par
+\tab\tab " Enter Your Choice ":=";\par
+       \tab cin>>ch;\par
+ \tab switch(ch)\par
+\tab  \tab\{\par
+\tab      \tab case 1:\par
+\tab\tab\tab for(i=0;i<20;i++)\par
+\tab\tab\tab   \tab\{\par
+\tab\tab\tab     \tab edge[i][0]=edge[i][0];\par
+\tab\tab\tab     \tab edge[i][1]=-edge[i][1];\par
+\tab\tab\tab     \tab edge[i][2]=-edge[i][2];\par
+\tab\tab\tab   \tab\}\par
+\tab\tab\tab draw_cube(edge);\par
+\tab\tab\tab break;\par
+\par
+\tab      \tab case 2:\par
+\tab      \tab\tab for(i=0;i<20;i++)\par
+\tab\tab\tab   \tab\{\par
+\tab\tab\tab     \tab edge[i][1]=edge[i][1];\par
+\tab\tab\tab     \tab edge[i][0]=-edge[i][0];\par
+\tab\tab\tab     \tab edge[i][2]=-edge[i][2];\par
+\tab\tab\tab   \tab\}\par
+\tab\tab\tab draw_cube(edge);\par
+\tab\tab\tab break;\par
+\par
+\tab      \tab case 3:\par
+\tab      \tab\tab for(i=0;i<20;i++)\par
+\tab\tab\tab   \tab\{\par
+\tab\tab\tab     \tab edge[i][2]=edge[i][2];\par
+\tab\tab\tab     \tab edge[i][0]=-edge[i][0];\par
+\tab\tab\tab     \tab edge[i][1]=-edge[i][1];\par
+\tab\tab\tab   \tab\}\par
+\tab\tab\tab draw_cube(edge);\par
+\tab\tab\tab break;\par
+\tab  \tab\}\par
+\tab\}\par
+\par
+void perspect(double edge[20][3])\par
+\tab\{\par
+    \tab int ch;\par
+    \tab int i;\par
+    \tab double p,q,r;\par
+    \tab clrscr();\par
+  \tab cout<<"\par
+\tab\tab\tab -=[ Perspective Projection About ]=-";\par
+ \tab cout<<"\par
+\par
+\tab\tab 1:==>" X-Axis "";\par
+\tab cout<<"\par
+\tab\tab 2:==>" Y-Axis "";\par
+        cout<<"\par
+\tab\tab 3:==>" Z-Axis "";\par
+       \tab cout<<"\par
+\par
+\tab\tab " Enter Your Choice ":=";\par
+\tab cin>>ch;\par
+\tab switch(ch)\par
+\tab  \tab\{\par
+\tab      \tab case 1:\par
+\tab\tab   \tab cout<<"\par
+\tab\tab " Enter P ":=";\par
+\tab\tab\tab cin>>p;\par
+\tab\tab\tab for(i=0;i<20;i++)\par
+\tab\tab\tab   \tab\{\par
+\tab\tab\tab     \tab edge[i][0]=edge[i][0]/(p*edge[i][0]+1);\par
+\tab\tab\tab     \tab edge[i][1]=edge[i][1]/(p*edge[i][0]+1);\par
+\tab\tab\tab     \tab edge[i][2]=edge[i][2]/(p*edge[i][0]+1);\par
+\tab\tab\tab   \tab\}\par
+\tab\tab\tab draw_cube(edge);\par
+\tab\tab\tab        break;\par
+\par
+\tab      \tab case 2:\par
+\tab\tab\tab cout<<"\par
+\tab\tab " Enter Q ":=";\par
+\tab\tab\tab cin>>q;\par
+\tab\tab\tab for(i=0;i<20;i++)\par
+\tab\tab\tab   \tab\{\par
+\tab\tab\tab     \tab edge[i][1]=edge[i][1]/(edge[i][1]*q+1);\par
+\tab\tab\tab     \tab edge[i][0]=edge[i][0]/(edge[i][1]*q+1);\par
+\tab\tab\tab     \tab edge[i][2]=edge[i][2]/(edge[i][1]*q+1);\par
+\tab\tab\tab   \tab\}\par
+\tab\tab\tab draw_cube(edge);\par
+\tab\tab\tab break;\par
+\par
+\tab      \tab case 3:\par
+\tab\tab\tab cout<<"\par
+\tab\tab " Enter R ":=";\par
+\tab\tab\tab cin>>r;\par
+\tab\tab\tab for(i=0;i<20;i++)\par
+\tab\tab\tab   \tab\{\par
+\tab\tab\tab     \tab edge[i][2]=edge[i][2]/(edge[i][2]*r+1);\par
+\tab\tab\tab     \tab edge[i][0]=edge[i][0]/(edge[i][2]*r+1);\par
+\tab\tab\tab     \tab edge[i][1]=edge[i][1]/(edge[i][2]*r+1);\par
+\tab\tab\tab   \tab\}\par
+\tab\tab\tab draw_cube(edge);\par
+\tab\tab\tab break;\par
+\tab  \tab\}\par
+     \tab closegraph();\par
+\tab\}\par
+\par
+\par
+void main()\par
+\tab\{\par
+  \tab int choice;\par
+      \tab double edge[20][3]=\par
+\tab\tab      \tab\{\par
+\tab\tab\tab 100,0,0,\par
+\tab\tab\tab 100,100,0,\par
+\tab\tab\tab 0,100,0,\par
+\tab\tab\tab 0,100,100,\par
+\tab\tab\tab 0,0,100,\par
+\tab\tab\tab 0,0,0,\par
+\tab\tab\tab 100,0,0,\par
+\tab\tab\tab 100,0,100,\par
+\tab\tab\tab 100,75,100,\par
+\tab\tab\tab 75,100,100,\par
+\tab\tab\tab 100,100,75,\par
+\tab\tab\tab 100,100,0,\par
+\tab\tab\tab 100,100,75,\par
+\tab\tab\tab 100,75,100,\par
+\tab\tab\tab 75,100,100,\par
+\tab\tab\tab 0,100,100,\par
+\tab\tab\tab 0,100,0,\par
+\tab\tab\tab 0,0,0,\par
+\tab\tab\tab 0,0,100,\par
+\tab\tab\tab 100,0,100\par
+\tab\tab      \tab\};\par
+        while(1)\par
+        \tab\{\par
+\tab\tab clrscr();\par
+        \tab show_message();\par
+\tab\tab cout<<"\par
+\par
+\tab\tab 1:==>" Draw Cube "";\par
+\tab\tab cout<<"\par
+\tab\tab 2:==>" Scaling "";\par
+\tab\tab cout<<"\par
+\tab\tab 3:==>" Rotation "";\par
+\tab\tab cout<<"\par
+\tab\tab 4:==>" Reflection "";\par
+\tab\tab cout<<"\par
+\tab\tab 5:==>" Translation "";\par
+\tab\tab cout<<"\par
+\tab\tab 6:==>" Perspective Projection "";\par
+\tab\tab cout<<"\par
+\tab\tab 7:==>" Exit "";\par
+\tab\tab cout<<"\par
+\par
+\tab\tab " Enter Your Choice ":=";\par
+\tab        \tab cin>>choice;\par
+\tab\tab switch(choice)\par
+\tab\tab\tab  \{\par
+\tab\tab\tab  case 1:\par
+\tab\tab\tab\tab draw_cube(edge);\par
+\tab\tab\tab\tab break;\par
+\par
+\tab\tab\tab  case 2:\par
+\tab\tab\tab\tab scale(edge);\par
+\tab\tab\tab\tab break;\par
+\par
+\tab\tab\tab  case 3:\par
+\tab\tab\tab\tab rotate(edge);\par
+\tab\tab\tab\tab break;\par
+\par
+\tab\tab\tab  case 4:\par
+\tab\tab\tab\tab reflect(edge);\par
+\tab\tab\tab\tab break;\par
+\par
+\tab\tab\tab  case 5:\par
+\tab\tab\tab\tab translate(edge);\par
+\tab\tab\tab\tab break;\par
+\par
+\tab\tab\tab  case 6:\par
+\tab\tab\tab     \tab perspect(edge);\par
+\tab\tab\tab\tab break;\par
+\par
+\tab\tab\tab  case 7:\par
+\tab\tab\tab\tab exit(0);\par
+\par
+\tab                  default:\par
+        \tab         \tab cout<<"\par
+\tab a" Press A Valid Key...!!! "";\par
+\tab                         getch();\par
+\tab                         break;\par
+\tab\tab\tab  \}\par
+\tab         closegraph();\par
+        \tab\}\par
+\tab\}\par
+}
+ 

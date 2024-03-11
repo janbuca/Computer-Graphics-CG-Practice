@@ -1,0 +1,321 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fswiss\fcharset0 Arial;}}
+{\*\generator Msftedit 5.41.15.1515;}\viewkind4\uc1\pard\f0\fs20 DX Ball Program in C++.\par
+\par
+#include<stdio.h>\par
+#include<conio.h>\par
+#include<dos.h>\par
+#include<graphics.h>\par
+#include<dos.h>\par
+#include<mouse.h>\par
+#include<string.h>\par
+\par
+int x,y,a,b,i,area,px,py,stat,bx=20,by=200,bxspeed=2,byspeed=2,scr=0;\par
+static int sq[15][15];\par
+char *paddal,*ball,dir[3]="br",score[4]="ss";\par
+void main()\par
+\{\par
+  char*img1,*img2;\par
+  int gd=DETECT,gm;\par
+  initgraph(&gd,&gm,"c:\\tc\\bgi");\par
+  x=getmaxx()/2,y=getmaxy()/2;\par
+\par
+  backfrm();\par
+  splace_form();\par
+  initmouse();\par
+while(1)\par
+\{\par
+getmousepos(&stat ,&px ,&py);\par
+delay(11);\par
+if(stat==1)\par
+break;\par
+\}\par
+mainfrm();\par
+\par
+  backfrm();\par
+  dpaddal();\par
+  backfrm();\par
+  dball();\par
+  backfrm();\par
+  lavel(1);\par
+  printlevel();\par
+ restrictmouseptr(16,500,540,500);\par
+\par
+while(!kbhit())\par
+\{\par
+delay(10);\par
+movepaddal();\par
+moveball();\par
+\}\par
+\par
+getch();\par
+\}\par
+\par
+\par
+\par
+\par
+//---------------------move ball---------------///\par
+moveball()\par
+\{\par
+ setfillstyle(SOLID_FILL,1);\par
+ bar(bx-2,by-2,bx+12,by+12);\par
+ putimage(bx,by,ball,COPY_PUT);\par
+ balldir();\par
+ if(!strcmp(dir,"bl"))        bx-=bxspeed,by+=byspeed;\par
+ if(!strcmp(dir,"br"))        bx+=bxspeed,by+=byspeed;\par
+ if(!strcmp(dir,"tl"))        bx-=bxspeed,by-=byspeed;\par
+ if(!strcmp(dir,"tr"))        bx+=bxspeed,by-=byspeed;\par
+\}\par
+\par
+//-----------------------ball diraction---------------//\par
+balldir()\par
+\{\par
+if(!strcmp(dir,"bl") && by>440)         btp("tl");\par
+if(!strcmp(dir,"br") && by>440)         btp("tr");\par
+if(!strcmp(dir,"tl") && by<122&&sq[(by-55)/15][(bx-16)/50]==0)\par
+bts("bl");\par
+if(!strcmp(dir,"tr") && by<122&&sq[(by-55)/15][(bx-16)/50]==0)\par
+bts("br");\par
+\par
+if(!strcmp(dir,"bl") && by<122&&sq[(by-55)/15][(bx-16)/50]==0)\par
+bts("tl");\par
+if(!strcmp(dir,"br") && by<122&&sq[(by-55)/15][(bx-16)/50]==0)\par
+bts("tr");\par
+\par
+ if(!strcmp(dir,"tr") && by<40)        strcpy(dir,"br"),sndplay(500);\par
+ if(!strcmp(dir,"tl") && by<40)        strcpy(dir,"bl"),sndplay(500);\par
+\par
+ if(!strcmp(dir,"bl") && bx<20)         strcpy(dir,"br"),sndplay(500);\par
+ if(!strcmp(dir,"tr") && bx>600)        strcpy(dir,"tl"),sndplay(500);\par
+ if(!strcmp(dir,"tl") && bx<20)         strcpy(dir,"tr"),sndplay(500);\par
+ if(!strcmp(dir,"br") && bx>600)        strcpy(dir,"bl"),sndplay(500);\par
+\par
+\}\par
+\par
+//-------------------------move paddal---------------///\par
+movepaddal()\par
+\{\par
+setfillstyle(SOLID_FILL,1);\par
+bar(16,450,612,460);\par
+getmousepos(&stat ,&px ,&py);\par
+putimage(px,450,paddal,COPY_PUT);\par
+\}\par
+\par
+//-----------------paddal--------------------//\par
+  dpaddal()\par
+  \{\par
+  int area;\par
+  setfillstyle(SOLID_FILL,15);\par
+  fillellipse(x,y,35,4);\par
+ area=imagesize(x-35,y-4,x+35,y+4);   //  find area of image\par
+ paddal=malloc(area);\par
+ getimage(x-35,y-4,x+35,y+4,paddal);\tab\tab  //get image in *paddal\par
+ \}\par
+//------------------ball------------------------//\par
+dball()\par
+\{\par
+  int area;\par
+  setfillstyle(SOLID_FILL,4);\par
+  fillellipse(x,y,5,5);\par
+  area=imagesize(x-5,y-5,x+5,y+5);   //  find area of image\par
+  ball=malloc(area);\par
+  getimage(x-5,y-5,x+5,y+5,ball);\tab\tab  //get image in *ball\par
+\}\par
+\par
+\par
+//-----------------------print squar--------------//\par
+squar(int a,int b ,int norm)\par
+\{\par
+     setfillstyle(SOLID_FILL,13);\par
+     if(b%2)\par
+     setfillstyle(SOLID_FILL,3);\par
+     if(norm==0)\par
+     setfillstyle(SOLID_FILL,1);\par
+     bar(b*50+16,a*15+55,b*50+63,a*15+54+13);\par
+\par
+  setfillstyle(SOLID_FILL,1);\par
+  bar(100,16,140,30);\par
+  setcolor(15);\par
+  settextstyle(2,0,6);\par
+  outtextxy(20,15,"Score -");\par
+  itoa(scr,score,10);\par
+  outtextxy(100,15,score);\par
+ \par
+\}\par
+\par
+//------------------------backfrm-------------------//\par
+backfrm()\par
+\{\par
+setfillstyle(SOLID_FILL,1);\par
+bar(15,15,615,465);\par
+\par
+button(0,0,15,480,1);\par
+button(615,0,630,480,1);\par
+button(0,0,630,15,1);\par
+button(0,465,630,480,1);\par
+\}\par
+\par
+//---------------SPLACE FORM---------------------------//\par
+splace_form()\par
+\{\par
+setcolor(4);\par
+settextstyle(4,0,6);\par
+outtextxy(x-145,y-200, "  GAME");\par
+\par
+outtextxy(x-145,y-50, "DX==BALL");\par
+setcolor(2);\par
+outtextxy(x-145,y-150, "--------");\par
+settextstyle(1,0,1);\par
+\}\par
+\par
+//--------------------------BUTTON-------------------------//\par
+button(int xl,int yt,int xr,int yb, int status)\par
+\{\par
+   setfillstyle(SOLID_FILL, LIGHTGRAY);\par
+   bar(xl, yt, xr, yb);\par
+   if (status) \{\par
+      setcolor(WHITE);\par
+      line(xl,yt,xl,yb-1);\par
+      line(xl,yt,xr-1,yt);\par
+      setcolor(DARKGRAY);\par
+      line(xr,yb,xl,yb);\par
+      line(xr,yb,xr,yt);\par
+\tab\tab   \}\par
+   else \{\par
+       setcolor(DARKGRAY);\par
+      line(xl,yt,xl,yb);\par
+      line(xl,yt,xr,yt);\par
+   \}\par
+ \}\tab\tab  /* Set_square */\par
+\par
+ //--------------------------sound--------------------------//\par
+ sndplay(int a)\par
+ \{\par
+ sound(a);\par
+ delay(20);\par
+ nosound();\par
+ \}\par
+ //-------------------------ball tuoch paddal---------------//\par
+ btp(char s[3])\par
+ \{\par
+  if(bx>=px&&bx<=px+10)      bxspeed=2,byspeed=1,strcpy(dir,"tl") ;\par
+  if(bx>=px+11&&bx<=px+30)   bxspeed=2,byspeed=2,strcpy(dir,"tl") ;\par
+  if(bx>=px+31&&bx<=px+35)   bxspeed=1,byspeed=2,strcpy(dir,"tl") ;\par
+  if(bx>=px+35&&bx<=px+40)   bxspeed=1,byspeed=2,strcpy(dir,"tr") ;\par
+  if(bx>=px+41&&bx<=px+60)   bxspeed=2,byspeed=2,strcpy(dir,"tr") ;\par
+  if(bx>=px+61&&bx<=px+70)   bxspeed=2,byspeed=1,strcpy(dir,"tr") ;\par
+  sndplay(500);\par
+  if(bx<=px||bx>=px+70)      getch(),strcpy(dir,s) ;\par
+ \}\par
+ //-------------------------ball tuoch square---------------//\par
+ bts(char s[3])\par
+ \{ scr+=100;\par
+  squar((by-55)/15,(bx-16)/50,0);\par
+  sq[(by-55)/15][(bx-16)/50]=1;\par
+  strcpy(dir,s) ;\par
+  sndplay(500);\par
+  win();\par
+  printlevel();\par
+ // else   sndplay(1500),getch(),strcpy(dir,"tl") ;\par
+ \}\par
+\par
+//-----------------------mainform--------------------------//\par
+mainfrm()\par
+\{\par
+backfrm();\par
+setcolor(4);\par
+settextstyle(4,0,6);\par
+outtextxy(x-145,y-200, "  GAME");\par
+outtextxy(x-145,y-100, "DX==BALL");\par
+setcolor(2);\par
+outtextxy(x-145,y-150, "---------");\par
+outtextxy(x-145,y-50, "---------");\par
+settextstyle(1,0,3);\par
+outtextxy(x-170,y+20, "do you wnat to play the game");\par
+setcolor(15);\par
+outtextxy(x-170,y+40,"------------------------");\par
+\par
+button(x+100,y+100,x+150,y+125,1);\par
+button(x-100,y+100,x-50,y+125,1);\par
+setcolor(15);\par
+settextstyle(2,0,6);\par
+outtextxy(x-90,y+100, " No");\par
+outtextxy(x+110,y+100,"Yes");\par
+ showmouseptr();\par
+ while(1)\par
+ \{\par
+   getmousepos(&stat ,&px ,&py);\par
+   if(stat==1&&px>=420&&px<=470&&py>=340 &&py<=365)\par
+   break;\par
+   if(stat==1&&px>=220&&px<=270&&py>=340 &&py<=365)\par
+   exit();\par
+  // gotoxy(10,10);\par
+  // printf("%d ,%d ,%d",px,py ,stat);\par
+   \}\par
+  hidemouseptr();\par
+   backfrm();\par
+\}\par
+//--------------------win()-------------------------------//\par
+win()\par
+\{\par
+int temp=0;\par
+for(a=0;a<5;a++)\par
+  for(b=0;b<12;b++)\par
+       if( sq[a][b]==1)   temp++;\par
+\par
+ if(temp==60)\par
+   \{\par
+   setcolor(4);\par
+   settextstyle(4,0,4);\par
+   outtextxy(x-145,y, " You Win The Game");\par
+   initmouse();\par
+   showmouseptr();\par
+    while(1)\par
+   \{\par
+    getmousepos(&stat ,&px ,&py);\par
+   delay(11);\par
+   if(stat==1)        break;\par
+   \}\par
+\par
+   mainfrm();\par
+   lavel(2);\par
+   printlevel();\par
+   restrictmouseptr(16,500,540,500);\par
+   \}\par
+\}\par
+//--------------------------lavel-----------------------//\par
+ lavel(int lbl)\par
+\{\par
+switch(lbl)\par
+  \{\par
+   case 1:\par
+\tab\tab     for(a=0;a<5;a++)\par
+\tab\tab      for(b=0;b<12;b++)\par
+\tab\tab         sq[a][b]=0;\par
+      break;\par
+   case 2:\par
+\tab\tab   for(a=0;a<5;a++)\par
+\tab\tab    for(b=0;b<12;b++)\par
+\tab\tab     if(b<=a||b>a+5)\par
+\tab\tab     sq[a][b]=1;\par
+   break;\par
+   default:\par
+\tab\tab     for(a=0;a<5;a++)\par
+\tab\tab       for(b=0;b<12;b++)\par
+\tab\tab         if(b<=a||b>a+5)\par
+\tab\tab  \tab\tab  sq[a][b]=1;\par
+   \}\par
+\}\par
+//------------------------print level---------------//\par
+ printlevel()\par
+\{\par
+for(a=0;a<5;a++)\par
+  for(b=0;b<12;b++)\par
+   \{\par
+   if(sq[a][b]==0)\par
+   squar(a,b,1);\par
+\par
+//   sq[a][b]=0;\par
+   \}\par
+\}\par
+}
+ 

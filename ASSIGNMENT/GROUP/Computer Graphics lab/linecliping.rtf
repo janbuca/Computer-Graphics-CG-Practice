@@ -1,0 +1,375 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fswiss\fcharset0 Arial;}}
+{\*\generator Msftedit 5.41.15.1515;}\viewkind4\uc1\pard\f0\fs20 Program to implement Line Clipping Algorithm\par
+\par
+#include<iostream.h>\par
+#include<conio.h>\par
+#include<math.h>\par
+#include<graphics.h>\par
+#include<dos.h>\par
+#include<process.h>\par
+\par
+int pixels[2][4];\par
+float xn1,xn2,yn1,yn2,x3,y3,m;\par
+\par
+\par
+void show_quadrant()\par
+\tab\{\par
+\tab cleardevice();\par
+\tab rectangle(120,40,320,240);\par
+\tab rectangle(320,40,520,240);\par
+\tab rectangle(120,240,320,440);\par
+\tab rectangle(320,240,520,440);\par
+\tab for(int i=130;i<=510;i+=10)\par
+\tab\tab\{\par
+\tab\tab if(i==320)\par
+\tab\tab continue;\par
+\tab\tab outtextxy(i,237,"+");\par
+\tab\tab\}\par
+\tab for(i=50;i<=430;i+=10)\par
+\tab\tab\{\par
+\tab\tab if(i==240)\par
+\tab\tab continue;\par
+\tab\tab outtextxy(317,i,"-");\par
+\tab\tab\}\par
+\tab outtextxy(310,230,"O");\par
+\tab outtextxy(530,240,"X");\par
+\tab outtextxy(320,450,"-Y");\par
+\tab outtextxy(100,240,"-X");\par
+\tab outtextxy(320,30,"Y");\par
+\tab\}\par
+\par
+void su_co(int x1,int y1,int x2,int y2,int xmin,int ymin,int xmax,int ymax)\par
+   \tab\{\par
+      \tab int i,j,fl;\par
+      \tab for(i=0;i<2;i++)\par
+      \tab\tab for(j=0;j<4;j++)\par
+\tab      \tab\tab pixels[i][j]=0;\par
+      \tab if(y1>ymax)\par
+\tab\tab pixels[0][0]=1;\par
+      \tab if(y1<ymin)\par
+\tab\tab pixels[0][1]=1;\par
+      \tab if(x1>xmax)\par
+\tab\tab pixels[0][2]=1;\par
+      \tab if(x1<xmin)\par
+\tab\tab pixels[0][3]=1;\par
+      \tab if(y2>ymax)\par
+\tab\tab pixels[1][0]=1;\par
+      \tab if(y2<ymin)\par
+\tab\tab pixels[1][1]=1;\par
+      \tab if(x2>xmax)\par
+\tab\tab pixels[1][2]=1;\par
+      \tab if(x2<xmin)\par
+\tab\tab pixels[1][3]=1;\par
+\par
+      \tab for(j=0;j<4;j++)\par
+      \tab\tab\{\par
+\tab  \tab if(pixels[0][j]==0&&pixels[1][j]==0)\par
+\tab     \tab continue;\par
+\tab\tab if(pixels[0][j]==1&&pixels[1][j]==1)\par
+\tab   \tab\tab\{\par
+\tab     \tab\tab fl=3;\par
+\tab     \tab\tab break;\par
+\tab   \tab\tab\}\par
+\tab\tab fl=2;\par
+      \tab\tab\}\par
+      \tab switch(fl)\par
+\tab\tab\{\par
+\tab    \tab case 1:\par
+\tab      \tab        \tab line(320+x1,240-y1,320+x2,240-y2);\par
+\tab      \tab\tab break;\par
+\par
+\tab    \tab case 3:\par
+\tab      \tab\tab cout<<"\par
+\par
+a" Line Is Not Visible...:-(";\par
+\tab      \tab\tab break;\par
+\par
+\tab    \tab case 2:\par
+\tab      \tab\tab m=(y2-y1)/(x2-x1);\par
+\tab      \tab\tab xn1=x1;\par
+\tab\tab\tab yn1=y1;\par
+\tab      \tab\tab xn2=x2;\par
+\tab\tab\tab yn2=y2;\par
+\tab\tab\tab if(pixels[0][0]==1)\par
+\tab        \tab\tab\tab\{\par
+\tab\tab\tab   \tab xn1=x1+(ymax-y1)/m;\par
+\tab\tab\tab   \tab yn1=ymax;\par
+\tab        \tab\tab\tab\}\par
+\tab\tab      \tab if(pixels[0][1]==1)\par
+\tab\tab        \tab\tab\{\par
+\tab\tab\tab   \tab xn1=x1+(ymin-y1)/m;\par
+\tab\tab   \tab\tab yn1=ymin;\par
+\tab\tab        \tab\tab\}\par
+\tab\tab      \tab if(pixels[0][2]==1)\par
+\tab        \tab\tab\tab\{\par
+\tab\tab   \tab\tab yn1=y1+(xmax-x1)*m;\par
+\tab\tab\tab   \tab xn1=xmax;\par
+\tab\tab        \tab\tab\}\par
+\tab      \tab\tab if(pixels[0][3]==1)\par
+\tab        \tab\tab\tab\{\par
+\tab\tab\tab   \tab yn1=y1+(xmin-x1)*m;\par
+\tab\tab\tab   \tab xn1=xmin;\par
+\tab        \tab\tab\tab\}\par
+\tab\tab      \tab if(pixels[1][0]==1)\par
+\tab        \tab\tab\tab\{\par
+\tab\tab\tab   \tab xn2=x2+(ymax-y2)/m;\par
+\tab\tab\tab   \tab yn2=ymax;\par
+\tab\tab        \tab\tab\}\par
+\tab      \tab\tab if(pixels[1][1]==1)\par
+\tab        \tab\tab\tab\{\par
+\tab\tab\tab   \tab xn2=x2+(ymin-y2)/m;\par
+\tab\tab\tab   \tab yn2=ymin;\par
+\tab        \tab\tab\tab\}\par
+\tab\tab      \tab if(pixels[1][2]==1)\par
+\tab\tab        \tab\tab\{\par
+\tab\tab\tab   \tab yn2=y2+(xmax-x2)*m;\par
+\tab\tab\tab   \tab xn2=xmax;\par
+\tab\tab        \tab\tab\}\par
+\tab\tab      \tab if(pixels[1][3]==1)\par
+\tab\tab        \tab\tab\{\par
+\tab\tab\tab   \tab yn2=y2+(xmin-x2)*m;\par
+\tab\tab   \tab\tab xn2=xmin;\par
+\tab\tab        \tab\tab\}\par
+\tab\tab      \tab line(320+xn1,240-yn1,320+xn2,240-yn2);\par
+\tab      \tab\tab break;\par
+\tab\tab\}\par
+   \tab\}\par
+\par
+\par
+void midpt(int x1,int y1,int x2,int y2,int xmin,int ymin,int xmax,int ymax)\par
+   \tab\{\par
+      \tab int fl=1;\par
+      \tab int i,j;\par
+     \tab int ox1=x1,ox2=x2,oy1=y1,oy2=y2;\par
+      \tab for(i=0;i<2;i++)\par
+\tab  \tab for(j=0;j<4;j++)\par
+\tab      \tab\tab pixels[i][j]=0;\par
+\par
+      \tab if(y1>ymax)\par
+\tab\tab pixels[0][0]=1;\par
+      \tab if(y1<ymin)\par
+\tab\tab pixels[0][1]=1;\par
+      \tab if(x1>xmax)\par
+\tab\tab pixels[0][2]=1;\par
+      \tab if(x1<xmin)\par
+\tab\tab pixels[0][3]=1;\par
+      \tab if(y2>ymax)\par
+\tab\tab pixels[1][0]=1;\par
+      \tab if(y2<ymin)\par
+\tab\tab pixels[1][1]=1;\par
+      \tab if(x2>xmax)\par
+\tab\tab pixels[1][2]=1;\par
+      \tab if(x2<xmin)\par
+\tab\tab pixels[1][3]=1;\par
+\par
+      \tab for(j=0;j<4;j++)\par
+      \tab\tab\{\par
+\tab  \tab if(pixels[0][j]==0&&pixels[1][j]==0)\par
+\tab     \tab continue;\par
+\par
+\tab  \tab if(pixels[0][j]==1&&pixels[1][j]==1)\par
+\tab   \tab\tab\{\par
+\tab     \tab\tab fl=3;\par
+\tab     \tab\tab break;\par
+\tab   \tab\tab\}\par
+\tab\tab fl=2;\par
+      \tab\tab\}\par
+      \tab switch(fl)\par
+      \tab\tab\{\par
+\tab    \tab case 1:\par
+\tab      \tab\tab line(320+x1,240-y1,320+x2,240-y2);\par
+\tab      \tab\tab break;\par
+\par
+\tab    \tab case 3:\par
+\tab      \tab\tab cout<<"\par
+\par
+a" Line Is Not Visible...:-(";\par
+\tab      \tab\tab break;\par
+\par
+\tab    \tab case 2:\par
+\tab      \tab\tab xn1=x1;\par
+\tab\tab\tab yn1=y1;\par
+\tab      \tab\tab xn2=x2;\par
+\tab\tab\tab yn2=y2;\par
+\tab      \tab\tab fl=0;\par
+\tab      \tab\tab x3=x1;\par
+\tab\tab\tab y3=y1;\par
+\tab      \tab\tab while(1)\par
+\tab        \tab\tab\tab\{\par
+\tab  if(!(y1>ymax || y1<ymin || x1>xmax || x1<xmin) && (x3 || y3)!=0.1)\par
+\tab\tab     \tab\tab break;\par
+\tab\tab  \tab\tab x3=(x1+x2)/2;\par
+\tab\tab  \tab\tab y3=(y1+y2)/2;\par
+\tab  if(!(y3>ymax || y3<ymin || x3>xmax || x3<xmin))\par
+\tab\tab\tab    \tab fl=1;\par
+\tab\tab  \tab\tab else\par
+\tab\tab\tab    \tab fl=0;\par
+\tab\tab  \tab\tab if(fl)\par
+\tab\tab\tab\tab    \tab\{\par
+\tab\tab       \tab\tab\tab x2=x3;\par
+\tab\tab       \tab\tab\tab y2=y3;\par
+\tab\tab    \tab\tab\tab\}\par
+\tab\tab  \tab\tab else\par
+\tab\tab    \tab\tab\tab\{\par
+\tab\tab       \tab\tab\tab x1=x3;\par
+\tab\tab       \tab\tab\tab y1=y3;\par
+\tab\tab    \tab\tab\tab\}\par
+\tab        \tab\tab\tab\}\par
+\tab      \tab\tab xn1=x3;\par
+\tab      \tab\tab yn1=y3;\par
+\tab      \tab\tab fl=0;\par
+\tab      \tab\tab x1=ox1;\par
+\tab      \tab\tab x2=ox2;\par
+\tab      \tab\tab y1=oy1;\par
+\tab      \tab\tab y2=oy2;\par
+\tab      \tab\tab x3=x2;\par
+\tab\tab\tab y3=y2;\par
+\tab      \tab\tab while(1)\par
+\tab        \tab\tab\tab\{\par
+\tab  if(!(y2>ymax || y2<ymin || x2>xmax || x2<xmin) && (x3 || y3)!=0.1)\par
+\tab\tab     \tab\tab break;\par
+\tab\tab  \tab\tab x3=(x1+x2)/2;\par
+\tab\tab  \tab\tab y3=(y1+y2)/2;\par
+\par
+\tab  if(!(y3>ymax || y3<ymin || x3>xmax || x3<xmin))\par
+\tab\tab    \tab\tab fl=1;\par
+\tab\tab  \tab\tab else\par
+\tab\tab    \tab\tab fl=0;\par
+\par
+\tab\tab  \tab\tab if(fl)\par
+\tab\tab    \tab\tab\tab\{\par
+\tab\tab       \tab\tab\tab x1=x3;\par
+\tab\tab       \tab\tab\tab y1=y3;\par
+\tab\tab    \tab\tab\tab\}\par
+\tab\tab  \tab\tab else\par
+\tab\tab    \tab\tab\tab\{\par
+\tab\tab       \tab\tab\tab x2=x3;\par
+\tab\tab       \tab\tab\tab y2=y3;\par
+\tab\tab    \tab\tab\tab\}\par
+\tab  \tab\tab\tab\}\par
+\tab  \tab\tab xn2=x3;\par
+\tab      \tab\tab yn2=y3;\par
+\tab      \tab\tab line(320+xn1,240-yn1,320+xn2,240-yn2);\par
+\tab      \tab\tab break;\par
+\tab  \tab\}\par
+   \tab\}\par
+\par
+void show_message()\par
+\tab\{\par
+\tab char *mess[]=\{"-","=","["," ","L","i","n","e"," ","C","l","i",\par
+\tab\tab       "p","p","i","n","g"," ","]","=","-",\};\par
+\tab int xx=29,xxx=50,i,j;\par
+\tab _setcursortype(_NOCURSOR);\par
+\tab for(i=0,j=21;i<13,j>=11;i++,j--)\par
+\tab\tab\{\par
+\tab\tab gotoxy(xx,1);\par
+\tab\tab cout<<mess[i];\par
+\tab\tab xx++;\par
+\tab\tab gotoxy(xxx,1);\par
+\tab\tab cout<<mess[j];\par
+\tab\tab xxx--;\par
+\tab\tab delay(50);\par
+\tab\tab\}\par
+\tab _setcursortype(_NORMALCURSOR);\par
+\tab\}\par
+\par
+\par
+void main()\par
+\tab\{\par
+\tab clrscr();\par
+        int gd=DETECT,gm,i,j;\par
+        int xmin,ymin,xmax,ymax,x1,y1,x2,y2;\par
+        int choice,ed[20],num;\par
+        show_message();\par
+        cout<<"\par
+\par
+\tab\tab " Enter The Co-Ordinates Of The Clipping Window."";\par
+\tab cout<<"\par
+\par
+\tab\tab " Enter X(min) & Y(min) ":=";\par
+        cin>>xmin>>ymin;\par
+\tab cout<<"\par
+\tab\tab " Enter X(max) & Y(max) ":=";\par
+        cin>>xmax>>ymax;\par
+\par
+        cout<<"\par
+\tab\tab " Enter The Co-Ordinates Of The Line."";\par
+\tab cout<<"\par
+\par
+\tab\tab " Enter X(1) & Y(1) ":=";\par
+        cin>>x1>>y1;\par
+\tab cout<<"\par
+\tab\tab " Enter X(2) & Y(2) ":=";\par
+        cin>>x2>>y2;\par
+        clrscr();\par
+        show_message();\par
+\tab cout<<"\par
+\par
+\par
+\tab\tab 1:==>" Sutherland-Cohen "";\par
+\tab cout<<"\par
+\par
+\tab\tab 2:==>" Mid-Point Method "";\par
+\tab cout<<"\par
+\par
+\tab\tab 3:==>" Exit "";\par
+\tab cout<<"\par
+\par
+\tab\tab " Enter Your Choice ":=";\par
+\tab cin>>choice;\par
+\tab switch(choice)\par
+\tab\tab\{\par
+\tab\tab case 1:\par
+\tab\tab\tab initgraph(&gd,&gm,"..\\bgi");\par
+\tab\tab\tab clearviewport();\par
+\tab\tab         show_quadrant();\par
+\tab\tab       \tab line(320+xmin,240-ymin,320+xmin,240-ymax);\par
+\tab\tab       \tab line(320+xmin,240-ymax,320+xmax,240-ymax);\par
+\tab\tab       \tab line(320+xmax,240-ymax,320+xmax,240-ymin);\par
+\tab\tab       \tab line(320+xmax,240-ymin,320+xmin,240-ymin);\par
+\tab\tab\tab line (320+x1,240-y1,320+x2,240-y2);\par
+\tab\tab         getch();\par
+\tab\tab         cleardevice();\par
+\tab\tab         show_quadrant();\par
+\tab\tab       \tab line(320+xmin,240-ymin,320+xmin,240-ymax);\par
+\tab\tab       \tab line(320+xmin,240-ymax,320+xmax,240-ymax);\par
+\tab\tab       \tab line(320+xmax,240-ymax,320+xmax,240-ymin);\par
+\tab\tab       \tab line(320+xmax,240-ymin,320+xmin,240-ymin);\par
+\tab\tab\tab su_co(x1,y1,x2,y2,xmin,ymin,xmax,ymax);\par
+\tab\tab\tab getch();\par
+\tab\tab\tab break;\par
+\par
+\tab\tab case 2:\par
+\tab\tab\tab initgraph(&gd,&gm,"..\\bgi");\par
+\tab\tab\tab clearviewport();\par
+\tab         \tab show_quadrant();\par
+\tab\tab       \tab line(320+xmin,240-ymin,320+xmin,240-ymax);\par
+\tab\tab       \tab line(320+xmin,240-ymax,320+xmax,240-ymax);\par
+\tab\tab       \tab line(320+xmax,240-ymax,320+xmax,240-ymin);\par
+\tab\tab       \tab line(320+xmax,240-ymin,320+xmin,240-ymin);\par
+\tab\tab\tab line (320+x1,240-y1,320+x2,240-y2);\par
+\tab         \tab getch();\par
+\tab\tab         cleardevice();\par
+\tab\tab         show_quadrant();\par
+\tab\tab       \tab line(320+xmin,240-ymin,320+xmin,240-ymax);\par
+\tab\tab       \tab line(320+xmin,240-ymax,320+xmax,240-ymax);\par
+\tab\tab       \tab line(320+xmax,240-ymax,320+xmax,240-ymin);\par
+\tab\tab       \tab line(320+xmax,240-ymin,320+xmin,240-ymin);\par
+\tab\tab    \tab midpt(x1,y1,x2,y2,xmin,ymin,xmax,ymax);\par
+\tab\tab\tab getch();\par
+\tab\tab\tab break;\par
+\par
+\tab\tab case 3:\par
+\tab\tab\tab exit(0);\par
+\par
+                default:\par
+                \tab cout<<"\par
+\tab a" Press A Valid Key...!!! "";\par
+                        getch();\par
+                        main();\par
+                        break;\par
+\tab\tab\}\par
+\tab closegraph();\par
+        \}\par
+}
+ 
